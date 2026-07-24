@@ -1,4 +1,3 @@
-name=index.js url=https://github.com/niteshkal03/gcp-with-mongodb/blob/main/index.js
 const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
