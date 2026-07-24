@@ -27,6 +27,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check Secret
+        run: |
+          echo "${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}"
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
