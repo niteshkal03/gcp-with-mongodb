@@ -1,4 +1,3 @@
-name=Dockerfile url=https://github.com/niteshkal03/gcp-with-mongodb/blob/main/Dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
