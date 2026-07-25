@@ -92,4 +92,4 @@ jobs:
       - name: Notify deployment
         if: always()
         run: |
-          echo "✅ Deployment completed successfully on GCP!"
+          echo "✅ Deployment completed successfully!"
