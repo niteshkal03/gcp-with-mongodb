@@ -1,644 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management System</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .form-section, .results-section {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-section h2, .results-section h2 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
-        }
-
-        button.submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        button.submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        button.submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .search-box {
-            margin-bottom: 25px;
-        }
-
-        .search-box input {
-            padding: 12px;
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-        }
-
-        .search-box input::placeholder {
-            color: #999;
-        }
-
-        .user-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #fff 100%);
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .user-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .user-info {
-            margin-bottom: 15px;
-        }
-
-        .user-info p {
-            margin: 8px 0;
-            color: #555;
-            font-size: 14px;
-        }
-
-        .user-info strong {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 10px;
-            padding-top: 15px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        button.edit-btn, button.delete-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        button.edit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        button.edit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        button.delete-btn {
-            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
-            color: white;
-        }
-
-        button.delete-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(244, 67, 54, 0.4);
-        }
-
-        button.delete-btn:active {
-            transform: translateY(0);
-        }
-
-        .success {
-            color: #4caf50;
-            background: #e8f5e9;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #4caf50;
-            font-weight: 500;
-        }
-
-        .error {
-            color: #f44336;
-            background: #ffebee;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #f44336;
-            font-weight: 500;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .empty-state svg {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        .stats {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .loading {
-            text-align: center;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-buttons .confirm-btn {
-            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
-            color: white;
-        }
-
-        .modal-buttons .confirm-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(244, 67, 54, 0.4);
-        }
-
-        .modal-buttons .cancel-btn {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        .modal-buttons .cancel-btn:hover {
-            background: #d0d0d0;
-        }
-
-        .no-users {
-            text-align: center;
-            color: #999;
-            padding: 30px;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .user-card {
-                padding: 15px;
-            }
-
-            .user-actions {
-                flex-direction: column;
-            }
-
-            button.edit-btn, button.delete-btn {
-                width: 100%;
-            }
-        }
-    </style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>User Registration Form</title>
+ <style>
+   * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+   }
+  
+   body {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     min-height: 100vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 20px;
+   }
+  
+   .container {
+     max-width: 900px;
+     width: 100%;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 30px;
+     align-items: start;
+   }
+  
+   .form-section, .results-section {
+     background: white;
+     padding: 30px;
+     border-radius: 10px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+   }
+  
+   h1 {
+     color: #333;
+     margin-bottom: 25px;
+     font-size: 24px;
+   }
+  
+   .form-group {
+     margin-bottom: 20px;
+   }
+  
+   label {
+     display: block;
+     margin-bottom: 8px;
+     color: #555;
+     font-weight: 600;
+   }
+  
+   input, select {
+     width: 100%;
+     padding: 12px;
+     border: 2px solid #e0e0e0;
+     border-radius: 5px;
+     font-size: 14px;
+     transition: border-color 0.3s;
+   }
+  
+   input:focus, select:focus {
+     outline: none;
+     border-color: #667eea;
+   }
+  
+   button {
+     width: 100%;
+     padding: 12px;
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     color: white;
+     border: none;
+     border-radius: 5px;
+     font-size: 16px;
+     font-weight: 600;
+     cursor: pointer;
+     transition: transform 0.2s;
+   }
+  
+   button:hover {
+     transform: translateY(-2px);
+   }
+  
+   .user-card {
+     background: #f5f5f5;
+     padding: 15px;
+     margin-bottom: 15px;
+     border-radius: 5px;
+     border-left: 4px solid #667eea;
+   }
+  
+   .user-card p {
+     margin: 5px 0;
+     color: #555;
+   }
+  
+   .user-card strong {
+     color: #333;
+   }
+  
+   .search-box {
+     margin-bottom: 20px;
+   }
+  
+   .search-box input {
+     padding: 10px;
+     margin-bottom: 10px;
+   }
+  
+   .success {
+     color: #4caf50;
+     background: #e8f5e9;
+     padding: 10px;
+     border-radius: 5px;
+     margin-bottom: 15px;
+   }
+  
+   .error {
+     color: #f44336;
+     background: #ffebee;
+     padding: 10px;
+     border-radius: 5px;
+     margin-bottom: 15px;
+   }
+  
+   @media (max-width: 768px) {
+     .container {
+       grid-template-columns: 1fr;
+     }
+   }
+ </style>
 </head>
 <body>
-    <div class="header">
-        <h1>👥 User Management System</h1>
-        <p>Create, View, and Manage User Records</p>
-    </div>
+ <div class="container">
+   <div class="form-section">
+     <h1>📝 User Registration</h1>
+     <form id="userForm">
+       <div class="form-group">
+         <label for="name">Name:</label>
+         <input type="text" id="name" name="name" required placeholder="Enter your name">
+       </div>
+      
+       <div class="form-group">
+         <label for="city">City:</label>
+         <input type="text" id="city" name="city" required placeholder="Enter your city">
+       </div>
+      
+       <div class="form-group">
+         <label for="degree">Degree:</label>
+         <select id="degree" name="degree" required>
+           <option value="">Select Degree</option>
+           <option value="Bachelor's">Bachelor's</option>
+           <option value="Master's">Master's</option>
+           <option value="PhD">PhD</option>
+           <option value="Diploma">Diploma</option>
+         </select>
+       </div>
+      
+       <button type="submit">✅ Submit</button>
+     </form>
+     <div id="message"></div>
+   </div>
+  
+   <div class="results-section">
+     <h1>📊 Users List</h1>
+     <div class="search-box">
+       <input type="text" id="searchInput" placeholder="🔍 Search users...">
+     </div>
+     <div id="usersList"></div>
+   </div>
+ </div>
 
-    <div class="container">
-        <!-- Form Section -->
-        <div class="form-section">
-            <h2>📝 Add New User</h2>
-            <form id="userForm">
-                <div class="form-group">
-                    <label for="name">👤 Name:</label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        name="name" 
-                        required 
-                        placeholder="Enter your full name"
-                    >
-                </div>
 
-                <div class="form-group">
-                    <label for="city">🏙️ City:</label>
-                    <input 
-                        type="text" 
-                        id="city" 
-                        name="city" 
-                        required 
-                        placeholder="Enter your city"
-                    >
-                </div>
+ <script>
+   const API_URL = '/api';
 
-                <div class="form-group">
-                    <label for="degree">🎓 Degree:</label>
-                    <select id="degree" name="degree" required>
-                        <option value="">Select your degree</option>
-                        <option value="Bachelor's">Bachelor's</option>
-                        <option value="Master's">Master's</option>
-                        <option value="PhD">PhD</option>
-                        <option value="Diploma">Diploma</option>
-                        <option value="High School">High School</option>
-                    </select>
-                </div>
 
-                <button type="submit" class="submit-btn">✅ Add User</button>
-            </form>
-            <div id="message"></div>
-        </div>
+   // Submit form
+   document.getElementById('userForm').addEventListener('submit', async (e) => {
+     e.preventDefault();
+    
+     const name = document.getElementById('name').value;
+     const city = document.getElementById('city').value;
+     const degree = document.getElementById('degree').value;
+     const messageDiv = document.getElementById('message');
 
-        <!-- Results Section -->
-        <div class="results-section">
-            <h2>📊 Users List</h2>
-            
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="🔍 Search by name, city, or degree..."
-                >
-            </div>
 
-            <div class="stats">
-                <span id="userCount">Total Users: 0</span>
-            </div>
+     try {
+       const response = await fetch(`${API_URL}/users`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ name, city, degree })
+       });
 
-            <div id="usersList"></div>
-        </div>
-    </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">⚠️ Confirm Delete</div>
-            <p id="deleteMessage" style="color: #666; margin-bottom: 20px;">
-                Are you sure you want to delete this user record?
-            </p>
-            <div class="modal-buttons">
-                <button class="confirm-btn" id="confirmDeleteBtn">Delete</button>
-                <button class="cancel-btn" id="cancelDeleteBtn">Cancel</button>
-            </div>
-        </div>
-    </div>
+       const data = await response.json();
+      
+       if (response.ok) {
+         messageDiv.innerHTML = '<div class="success">✅ User added successfully!</div>';
+         document.getElementById('userForm').reset();
+         loadUsers();
+         setTimeout(() => messageDiv.innerHTML = '', 3000);
+       } else {
+         messageDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
+       }
+     } catch (error) {
+       messageDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+     }
+   });
 
-    <script>
-        const API_URL = '/api';
-        let allUsers = [];
-        let userToDelete = null;
 
-        // ========== Form Submit ==========
-        document.getElementById('userForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+   // Load all users
+   async function loadUsers() {
+     try {
+       const response = await fetch(`${API_URL}/users`);
+       const users = await response.json();
+       displayUsers(users);
+     } catch (error) {
+       console.error('Error loading users:', error);
+     }
+   }
 
-            const name = document.getElementById('name').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const degree = document.getElementById('degree').value;
-            const messageDiv = document.getElementById('message');
 
-            if (!name || !city || !degree) {
-                messageDiv.innerHTML = '<div class="error">❌ Please fill all fields</div>';
-                return;
-            }
+   // Display users
+   function displayUsers(users) {
+     const usersList = document.getElementById('usersList');
+     if (users.length === 0) {
+       usersList.innerHTML = '<p style="color: #999; text-align: center;">No users yet</p>';
+       return;
+     }
+    
+     usersList.innerHTML = users.map(user => `
+       <div class="user-card">
+         <p><strong>Name:</strong> ${user.name}</p>
+         <p><strong>City:</strong> ${user.city}</p>
+         <p><strong>Degree:</strong> ${user.degree}</p>
+       </div>
+     `).join('');
+   }
 
-            try {
-                const response = await fetch(`${API_URL}/users`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, city, degree })
-                });
 
-                const data = await response.json();
+   // Search functionality
+   document.getElementById('searchInput').addEventListener('input', async (e) => {
+     const query = e.target.value.trim();
+    
+     if (!query) {
+       loadUsers();
+       return;
+     }
 
-                if (response.ok) {
-                    messageDiv.innerHTML = '<div class="success">✅ User added successfully!</div>';
-                    document.getElementById('userForm').reset();
-                    loadUsers();
-                    setTimeout(() => messageDiv.innerHTML = '', 3000);
-                } else {
-                    messageDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
-                }
-            } catch (error) {
-                messageDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
-            }
-        });
 
-        // ========== Load All Users ==========
-        async function loadUsers() {
-            try {
-                const response = await fetch(`${API_URL}/users`);
-                const users = await response.json();
-                allUsers = users;
-                displayUsers(users);
-                updateUserCount(users.length);
-            } catch (error) {
-                console.error('Error loading users:', error);
-                document.getElementById('usersList').innerHTML = 
-                    '<div class="error">❌ Error loading users</div>';
-            }
-        }
+     try {
+       const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`);
+       const results = await response.json();
+       displayUsers(results);
+     } catch (error) {
+       console.error('Search error:', error);
+     }
+   });
 
-        // ========== Display Users ==========
-        function displayUsers(users) {
-            const usersList = document.getElementById('usersList');
-            
-            if (users.length === 0) {
-                usersList.innerHTML = `
-                    <div class="no-users">
-                        <p>📭 No users found</p>
-                        <p style="font-size: 12px; margin-top: 10px;">Add a new user using the form on the left</p>
-                    </div>
-                `;
-                return;
-            }
 
-            usersList.innerHTML = users.map(user => `
-                <div class="user-card">
-                    <div class="user-info">
-                        <p><strong>👤 Name:</strong> ${escapeHtml(user.name)}</p>
-                        <p><strong>🏙️ City:</strong> ${escapeHtml(user.city)}</p>
-                        <p><strong>🎓 Degree:</strong> ${escapeHtml(user.degree)}</p>
-                        ${user.createdAt ? `<p style="font-size: 12px; color: #999;"><strong>📅 Added:</strong> ${new Date(user.createdAt).toLocaleDateString()}</p>` : ''}
-                    </div>
-                    <div class="user-actions">
-                        <button class="edit-btn" onclick="editUser('${user._id}')">✏️ Edit</button>
-                        <button class="delete-btn" onclick="openDeleteModal('${user._id}', '${escapeHtml(user.name)}')">🗑️ Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ========== Update User Count ==========
-        function updateUserCount(count) {
-            document.getElementById('userCount').textContent = `Total Users: ${count}`;
-        }
-
-        // ========== Search Functionality ==========
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const query = e.target.value.trim().toLowerCase();
-
-            if (!query) {
-                displayUsers(allUsers);
-                updateUserCount(allUsers.length);
-                return;
-            }
-
-            const filtered = allUsers.filter(user =>
-                user.name.toLowerCase().includes(query) ||
-                user.city.toLowerCase().includes(query) ||
-                user.degree.toLowerCase().includes(query)
-            );
-
-            displayUsers(filtered);
-            updateUserCount(filtered.length);
-        });
-
-        // ========== Delete Modal Functions ==========
-        function openDeleteModal(userId, userName) {
-            userToDelete = userId;
-            document.getElementById('deleteMessage').textContent = 
-                `Are you sure you want to delete "${userName}"? This action cannot be undone.`;
-            document.getElementById('deleteModal').classList.add('active');
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('active');
-            userToDelete = null;
-        }
-
-        document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
-
-        // ========== Confirm Delete ==========
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-            if (!userToDelete) return;
-
-            try {
-                const response = await fetch(`${API_URL}/users/${userToDelete}`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    closeDeleteModal();
-                    
-                    const messageDiv = document.getElementById('message');
-                    messageDiv.innerHTML = '<div class="success">✅ User deleted successfully!</div>';
-                    
-                    loadUsers();
-                    
-                    setTimeout(() => messageDiv.innerHTML = '', 3000);
-                } else {
-                    alert(`❌ Error: ${data.error}`);
-                }
-            } catch (error) {
-                alert(`❌ Error: ${error.message}`);
-            }
-        });
-
-        // ========== Edit User (Placeholder) ==========
-        function editUser(userId) {
-            alert('Edit functionality coming soon! User ID: ' + userId);
-            // TODO: Implement edit functionality
-        }
-
-        // ========== Close Modal on Outside Click ==========
-        window.addEventListener('click', (e) => {
-            const modal = document.getElementById('deleteModal');
-            if (e.target === modal) {
-                closeDeleteModal();
-            }
-        });
-
-        // ========== Escape Key to Close Modal ==========
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeDeleteModal();
-            }
-        });
-
-        // ========== Prevent XSS ==========
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-
-        // ========== Load Users on Page Load ==========
-        loadUsers();
-    </script>
+   // Load users on page load
+   loadUsers();
+ </script>
 </body>
 </html>
+
