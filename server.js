@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://nitesh:Nfdd1223@cluster0.kcjasgc.mongodb.net/?appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://nitesh:Nitesh123@cluster0.kcjasgc.mongodb.net/?appName=Cluster0';
 const JWT_SECRET = process.env.JWT_SECRET || '368ca4e46d889c5da3cd9693739bc15839d0db4d5750af9aaccbcc48889f62fa';
 const client = new mongodb.MongoClient(MONGODB_URI);
 let db;
