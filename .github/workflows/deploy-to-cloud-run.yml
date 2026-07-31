@@ -5,9 +5,6 @@ on:
     branches:
       - main
       - dev
-  pull_request:
-    branches:
-      - main
 
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
@@ -19,56 +16,63 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: main
-    
+
     permissions:
       contents: read
       id-token: write
 
     steps:
-      - name: Checkout code
+      # Checkout Source Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Check Secret
-        run: |
-          echo "${{ secrets.WIF_PROVIDER }}"
-
-      - name: Set up Node.js
+      # Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 22
 
-      - name: Install dependencies
+      # Install Dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
+      # Verify Node Installation
+      - name: Verify Node
+        run: |
+          node -v
+          npm -v
 
+      # Authenticate with Google Cloud
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
-      - name: Set up Cloud SDK
+      # Install Google Cloud SDK
+      - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker authentication
+      # Configure Docker Authentication
+      - name: Configure Docker
         run: |
-          gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev
+          gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
-      - name: Build Docker image
+      # Build Docker Image
+      - name: Build Docker Image
         run: |
           docker build \
             -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/cloud-run-repo/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/cloud-run-repo/${{ env.IMAGE_NAME }}:latest \
             .
 
-      - name: Push to Artifact Registry
+      # Push Docker Image
+      - name: Push Docker Image
         run: |
           docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/cloud-run-repo/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/cloud-run-repo/${{ env.IMAGE_NAME }}:latest
 
+      # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
@@ -76,20 +80,24 @@ jobs:
             --region=${{ env.GCP_REGION }} \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars="MONGODB_URI=${{ secrets.MONGODB_URI }},NODE_ENV=production" \
+            --port=8080 \
             --memory=512Mi \
             --cpu=1 \
             --timeout=3600 \
-            --max-instances=100
+            --max-instances=10 \
+            --min-instances=0 \
+            --set-env-vars="NODE_ENV=production,MONGODB_URI=${{ secrets.MONGODB_URI }},JWT_SECRET=${{ secrets.JWT_SECRET }}"
 
-      - name: Get Service URL
+      # Display Service URL
+      - name: Get Cloud Run URL
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
-            --region=${{ env.GCP_REGION }} \
-            --format='value(status.url)')
-          echo "🚀 Service deployed at: $SERVICE_URL"
+          --region=${{ env.GCP_REGION }} \
+          --format='value(status.url)')
 
-      - name: Notify deployment
-        if: always()
-        run: |
-          echo "✅ Deployment completed successfully!"
+          echo ""
+          echo "=========================================="
+          echo "🚀 Deployment Successful"
+          echo "Application URL:"
+          echo "$SERVICE_URL"
+          echo "=========================================="

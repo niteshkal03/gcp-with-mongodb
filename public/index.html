@@ -1,271 +1,1197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>User Registration Form</title>
- <style>
-   * {
-     margin: 0;
-     padding: 0;
-     box-sizing: border-box;
-   }
-  
-   body {
-     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-     min-height: 100vh;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     padding: 20px;
-   }
-  
-   .container {
-     max-width: 900px;
-     width: 100%;
-     display: grid;
-     grid-template-columns: 1fr 1fr;
-     gap: 30px;
-     align-items: start;
-   }
-  
-   .form-section, .results-section {
-     background: white;
-     padding: 30px;
-     border-radius: 10px;
-     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-   }
-  
-   h1 {
-     color: #333;
-     margin-bottom: 25px;
-     font-size: 24px;
-   }
-  
-   .form-group {
-     margin-bottom: 20px;
-   }
-  
-   label {
-     display: block;
-     margin-bottom: 8px;
-     color: #555;
-     font-weight: 600;
-   }
-  
-   input, select {
-     width: 100%;
-     padding: 12px;
-     border: 2px solid #e0e0e0;
-     border-radius: 5px;
-     font-size: 14px;
-     transition: border-color 0.3s;
-   }
-  
-   input:focus, select:focus {
-     outline: none;
-     border-color: #667eea;
-   }
-  
-   button {
-     width: 100%;
-     padding: 12px;
-     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-     color: white;
-     border: none;
-     border-radius: 5px;
-     font-size: 16px;
-     font-weight: 600;
-     cursor: pointer;
-     transition: transform 0.2s;
-   }
-  
-   button:hover {
-     transform: translateY(-2px);
-   }
-  
-   .user-card {
-     background: #f5f5f5;
-     padding: 15px;
-     margin-bottom: 15px;
-     border-radius: 5px;
-     border-left: 4px solid #667eea;
-   }
-  
-   .user-card p {
-     margin: 5px 0;
-     color: #555;
-   }
-  
-   .user-card strong {
-     color: #333;
-   }
-  
-   .search-box {
-     margin-bottom: 20px;
-   }
-  
-   .search-box input {
-     padding: 10px;
-     margin-bottom: 10px;
-   }
-  
-   .success {
-     color: #4caf50;
-     background: #e8f5e9;
-     padding: 10px;
-     border-radius: 5px;
-     margin-bottom: 15px;
-   }
-  
-   .error {
-     color: #f44336;
-     background: #ffebee;
-     padding: 10px;
-     border-radius: 5px;
-     margin-bottom: 15px;
-   }
-  
-   @media (max-width: 768px) {
-     .container {
-       grid-template-columns: 1fr;
-     }
-   }
- </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Learning Platform - Registration</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      min-height: 100vh;
+      padding: 15px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ============ ANIMATED BACKGROUND ============ */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating animation for background elements */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(20px) rotate(5deg); }
+    }
+
+    @keyframes float-slow {
+      0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+      50% { transform: translateX(15px) translateY(18px) rotate(-5deg); }
+    }
+
+    /* Floating books decoration */
+    .floating-books {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .book {
+      position: absolute;
+      font-size: 50px;
+      opacity: 0.25;
+      animation: float 6s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .book1 { top: 10%; left: 5%; animation-delay: 0s; }
+    .book2 { bottom: 15%; right: 10%; animation-delay: 1s; }
+    .book3 { top: 35%; right: 5%; animation-delay: 2s; }
+    .book4 { bottom: 30%; left: 8%; animation-delay: 1.5s; }
+    .book5 { top: 20%; left: 50%; animation-delay: 2.5s; }
+
+    .pencil {
+      position: absolute;
+      font-size: 45px;
+      opacity: 0.22;
+      animation: float-slow 8s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .pencil1 { top: 45%; right: 22%; animation-delay: 0.5s; }
+    .pencil2 { bottom: 35%; left: 20%; animation-delay: 1s; }
+
+    .bulb {
+      position: absolute;
+      font-size: 50px;
+      opacity: 0.24;
+      animation: float 7s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .bulb1 { top: 15%; right: 15%; animation-delay: 0s; }
+    .bulb2 { bottom: 20%; right: 32%; animation-delay: 2s; }
+
+    .badge {
+      position: absolute;
+      font-size: 48px;
+      opacity: 0.23;
+      animation: float-slow 9s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .badge1 { top: 50%; left: 8%; animation-delay: 1.5s; }
+    .badge2 { top: 25%; right: 25%; animation-delay: 2.5s; }
+
+    .student-img {
+      position: absolute;
+      font-size: 90px;
+      opacity: 0.28;
+      animation: float 8s ease-in-out infinite;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+    }
+
+    .student1 { bottom: 8%; left: 3%; animation-delay: 0s; }
+    .student2 { top: 8%; right: 4%; animation-delay: 1.5s; }
+    .student3 { bottom: 40%; right: 2%; animation-delay: 0.5s; }
+
+    /* ============ TOP BAR ============ */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 100%;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 15px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-icon {
+      font-size: 26px;
+    }
+
+    .admin-link {
+      font-size: 12px;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      padding: 8px 14px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+    }
+
+    .admin-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      transform: translateY(-2px);
+    }
+
+    /* ============ MAIN CONTAINER ============ */
+    .main-container {
+      max-width: 550px;
+      margin: 0 auto;
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 10;
+    }
+
+    .form-header {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .form-header-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .form-header h1 {
+      font-size: 24px;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .form-header p {
+      color: #666;
+      font-size: 12px;
+    }
+
+    /* ============ FORM STYLING ============ */
+    .form-group {
+      margin-bottom: 11px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #1a1a1a;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .required {
+      color: #dc3545;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 7px;
+      font-size: 12px;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      background: #f8f9ff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 65px;
+    }
+
+    /* ============ SUBMIT BUTTON ============ */
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 6px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ============ ALERTS ============ */
+    .alert {
+      padding: 10px 12px;
+      border-radius: 7px;
+      margin-bottom: 12px;
+      display: none;
+      font-size: 12px;
+      border-left: 4px solid;
+    }
+
+    .alert.success {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+      display: block;
+    }
+
+    .alert.error {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+      display: block;
+    }
+
+    /* ============ LOGIN PAGE ============ */
+    .login-container {
+      max-width: 420px;
+      margin: 0 auto;
+      background: white;
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    .login-header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .login-header-icon {
+      font-size: 45px;
+      margin-bottom: 12px;
+    }
+
+    .login-header h1 {
+      font-size: 22px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .login-header p {
+      color: #666;
+      font-size: 13px;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .back-link a {
+      color: #6366f1;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    .demo-credentials {
+      margin-top: 18px;
+      padding: 12px;
+      background: linear-gradient(135deg, #6366f115 0%, #8b5cf615 100%);
+      border-radius: 8px;
+      border-left: 3px solid #6366f1;
+      font-size: 12px;
+    }
+
+    .demo-credentials p {
+      color: #666;
+      margin: 3px 0;
+    }
+
+    .demo-credentials strong {
+      color: #1a1a1a;
+    }
+
+    /* ============ ADMIN DASHBOARD ============ */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .dashboard-header h1 {
+      font-size: 22px;
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      border-left: 4px solid #6366f1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-number {
+      font-size: 26px;
+      font-weight: 700;
+      color: #6366f1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid #e0e0e0;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: #666;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      border-bottom-color: #6366f1;
+      color: #6366f1;
+    }
+
+    .tab-btn:hover {
+      color: #6366f1;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .search-btn {
+      padding: 9px 18px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    }
+
+    .search-btn:hover {
+      background: #4f46e5;
+      transform: translateY(-2px);
+    }
+
+    .registrations-container {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    }
+
+    th {
+      padding: 13px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: #1a1a1a;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid #e0e0e0;
+      color: #333;
+    }
+
+    tr:hover {
+      background: #f8f9ff;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-approved {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .btn-action {
+      padding: 5px 10px;
+      font-size: 11px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .btn-approve {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-approve:hover {
+      background: #218838;
+      transform: translateY(-1px);
+    }
+
+    .btn-reject {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-reject:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .btn-delete:hover {
+      background: #e0a800;
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 35px;
+      color: #999;
+      background: white;
+      border-radius: 12px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .main-container, .login-container {
+        padding: 20px;
+        max-width: calc(100% - 30px);
+      }
+
+      .form-header {
+        margin-bottom: 14px;
+      }
+
+      .form-header-icon {
+        font-size: 35px;
+        margin-bottom: 8px;
+      }
+
+      .form-header h1 {
+        font-size: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 10px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      table {
+        font-size: 11px;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-action {
+        width: 100%;
+      }
+
+      .tabs {
+        flex-wrap: wrap;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .logo {
+        font-size: 16px;
+      }
+
+      .book, .pencil, .bulb, .badge, .student-img {
+        font-size: 40px !important;
+      }
+    }
+  </style>
 </head>
 <body>
- <div class="container">
-   <div class="form-section">
-     <h1>📝 User Registration</h1>
-     <form id="userForm">
-       <div class="form-group">
-         <label for="name">Name:</label>
-         <input type="text" id="name" name="name" required placeholder="Enter your name">
-       </div>
-      
-       <div class="form-group">
-         <label for="city">City:</label>
-         <input type="text" id="city" name="city" required placeholder="Enter your city">
-       </div>
-      
-       <div class="form-group">
-         <label for="degree">Degree:</label>
-         <select id="degree" name="degree" required>
-           <option value="">Select Degree</option>
-           <option value="Bachelor's">Bachelor's</option>
-           <option value="Master's">Master's</option>
-           <option value="PhD">PhD</option>
-           <option value="Diploma">Diploma</option>
-         </select>
-       </div>
-      
-       <button type="submit">✅ Submit</button>
-     </form>
-     <div id="message"></div>
-   </div>
-  
-   <div class="results-section">
-     <h1>📊 Users List</h1>
-     <div class="search-box">
-       <input type="text" id="searchInput" placeholder="🔍 Search users...">
-     </div>
-     <div id="usersList"></div>
-   </div>
- </div>
+  <!-- Floating decorative elements -->
+  <div class="floating-books">
+    <div class="book book1">📚</div>
+    <div class="book book2">📖</div>
+    <div class="book book3">📕</div>
+    <div class="book book4">📗</div>
+    <div class="book book5">📘</div>
+    <div class="pencil pencil1">✏️</div>
+    <div class="pencil pencil2">✍️</div>
+    <div class="bulb bulb1">💡</div>
+    <div class="bulb bulb2">💡</div>
+    <div class="badge badge1">🏆</div>
+    <div class="badge badge2">🎓</div>
+    <div class="student-img student1">👨‍🎓</div>
+    <div class="student-img student2">👩‍🎓</div>
+    <div class="student-img student3">👨‍💼</div>
+  </div>
 
+  <!-- ============ REGISTRATION PAGE ============ -->
+  <div id="registrationPage">
+    <div class="container">
+      <div class="top-bar">
+        <div class="logo">
+          <span class="logo-icon">🎓</span>
+          <span>EduLearn</span>
+        </div>
+        <a class="admin-link" onclick="showAdminLogin()" href="#">Admin Dashboard</a>
+      </div>
 
- <script>
-   const API_URL = '/api';
+      <div class="main-container">
+        <div class="form-header">
+          <div class="form-header-icon">📝</div>
+          <h1>Student Registration</h1>
+          <p>Join our learning community today</p>
+        </div>
 
+        <div id="registrationAlert" class="alert"></div>
 
-   // Submit form
-   document.getElementById('userForm').addEventListener('submit', async (e) => {
-     e.preventDefault();
-    
-     const name = document.getElementById('name').value;
-     const city = document.getElementById('city').value;
-     const degree = document.getElementById('degree').value;
-     const messageDiv = document.getElementById('message');
+        <form id="registrationForm">
+          <div class="form-group">
+            <label>Full Name <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+          </div>
 
+          <div class="form-group">
+            <label>Father's Name <span class="required">*</span></label>
+            <input type="text" id="fatherName" name="fatherName" required placeholder="Enter father's name">
+          </div>
 
-     try {
-       const response = await fetch(`${API_URL}/users`, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ name, city, degree })
-       });
+          <div class="form-group">
+            <label>Qualification <span class="required">*</span></label>
+            <select id="qualification" name="qualification" required>
+              <option value="">Select Your Qualification</option>
+              <option value="10th">10th Pass</option>
+              <option value="12th">12th Pass</option>
+              <option value="Diploma">Diploma</option>
+              <option value="Bachelor's">Bachelor's Degree</option>
+              <option value="Master's">Master's Degree</option>
+              <option value="PhD">PhD</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
+          <div class="form-group">
+            <label>Mobile Number <span class="required">*</span></label>
+            <input type="tel" id="mobileNumber" name="mobileNumber" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+          </div>
 
-       const data = await response.json();
-      
-       if (response.ok) {
-         messageDiv.innerHTML = '<div class="success">✅ User added successfully!</div>';
-         document.getElementById('userForm').reset();
-         loadUsers();
-         setTimeout(() => messageDiv.innerHTML = '', 3000);
-       } else {
-         messageDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
-       }
-     } catch (error) {
-       messageDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
-     }
-   });
+          <div class="form-group">
+            <label>Address <span class="required">*</span></label>
+            <textarea id="address" name="address" required placeholder="Enter your complete address"></textarea>
+          </div>
 
+          <div class="form-group">
+            <label>Email ID <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email address">
+          </div>
 
-   // Load all users
-   async function loadUsers() {
-     try {
-       const response = await fetch(`${API_URL}/users`);
-       const users = await response.json();
-       displayUsers(users);
-     } catch (error) {
-       console.error('Error loading users:', error);
-     }
-   }
+          <button type="submit" class="submit-btn">📚 Register Now</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
+  <!-- ============ ADMIN LOGIN PAGE ============ -->
+  <div id="adminLoginPage" class="hidden">
+    <div class="container">
+      <div class="top-bar">
+        <div class="logo">
+          <span class="logo-icon">🎓</span>
+          <span>EduLearn</span>
+        </div>
+        <a class="admin-link" onclick="showRegistration()" href="#">Back to Registration</a>
+      </div>
 
-   // Display users
-   function displayUsers(users) {
-     const usersList = document.getElementById('usersList');
-     if (users.length === 0) {
-       usersList.innerHTML = '<p style="color: #999; text-align: center;">No users yet</p>';
-       return;
-     }
-    
-     usersList.innerHTML = users.map(user => `
-       <div class="user-card">
-         <p><strong>Name:</strong> ${user.name}</p>
-         <p><strong>City:</strong> ${user.city}</p>
-         <p><strong>Degree:</strong> ${user.degree}</p>
-       </div>
-     `).join('');
-   }
+      <div class="login-container">
+        <div class="login-header">
+          <div class="login-header-icon">🔐</div>
+          <h1>Admin Dashboard</h1>
+          <p>Sign in to manage student registrations</p>
+        </div>
 
+        <div id="loginAlert" class="alert"></div>
 
-   // Search functionality
-   document.getElementById('searchInput').addEventListener('input', async (e) => {
-     const query = e.target.value.trim();
-    
-     if (!query) {
-       loadUsers();
-       return;
-     }
+        <form id="loginForm">
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" id="adminEmail" name="email" required placeholder="Enter admin email">
+          </div>
 
+          <div class="form-group">
+            <label>Password <span class="required">*</span></label>
+            <input type="password" id="adminPassword" name="password" required placeholder="Enter password">
+          </div>
 
-     try {
-       const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`);
-       const results = await response.json();
-       displayUsers(results);
-     } catch (error) {
-       console.error('Search error:', error);
-     }
-   });
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
 
+        <div class="back-link">
+          <a onclick="showRegistration()" href="#">Back to Registration</a>
+        </div>
 
-   // Load users on page load
-   loadUsers();
- </script>
+        <div class="demo-credentials">
+          <p><strong>Demo Credentials:</strong></p>
+          <p>Email: admin@example.com</p>
+          <p>Password: admin123</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN DASHBOARD PAGE ============ -->
+  <div id="adminDashboardPage" class="hidden">
+    <div class="container">
+      <div class="main-container" style="max-width: 1200px; margin-bottom: 25px;">
+        <div class="dashboard-header">
+          <h1>📊 Student Management Dashboard</h1>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalCount">0</div>
+            <div class="stat-label">Total Registrations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="pendingCount">0</div>
+            <div class="stat-label">Pending Review</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="approvedCount">0</div>
+            <div class="stat-label">Approved</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="rejectedCount">0</div>
+            <div class="stat-label">Rejected</div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showAllRegistrations()">All Students</button>
+          <button class="tab-btn" onclick="showPendingRegistrations()">⏳ Pending</button>
+          <button class="tab-btn" onclick="showApprovedRegistrations()">✅ Approved</button>
+          <button class="tab-btn" onclick="showRejectedRegistrations()">❌ Rejected</button>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by name, email, or mobile...">
+          <button class="search-btn" onclick="searchRegistrations()">🔍 Search</button>
+        </div>
+
+        <div id="dashboardAlert" class="alert"></div>
+
+        <div class="registrations-container">
+          <div id="registrationsTable"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let authToken = localStorage.getItem('authToken');
+    let currentFilterStatus = null;
+
+    // ============ PAGE NAVIGATION ============
+    function showRegistration() {
+      document.getElementById('registrationPage').classList.remove('hidden');
+      document.getElementById('adminLoginPage').classList.add('hidden');
+      document.getElementById('adminDashboardPage').classList.add('hidden');
+    }
+
+    function showAdminLogin(event) {
+      if (event) event.preventDefault();
+      document.getElementById('registrationPage').classList.add('hidden');
+      document.getElementById('adminLoginPage').classList.remove('hidden');
+      document.getElementById('adminDashboardPage').classList.add('hidden');
+    }
+
+    function showAdminDashboard() {
+      document.getElementById('registrationPage').classList.add('hidden');
+      document.getElementById('adminLoginPage').classList.add('hidden');
+      document.getElementById('adminDashboardPage').classList.remove('hidden');
+      loadStats();
+      showAllRegistrations();
+    }
+
+    // ============ REGISTRATION FORM ============
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: document.getElementById('name').value,
+        fatherName: document.getElementById('fatherName').value,
+        qualification: document.getElementById('qualification').value,
+        mobileNumber: document.getElementById('mobileNumber').value,
+        address: document.getElementById('address').value,
+        email: document.getElementById('email').value
+      };
+
+      try {
+        const response = await fetch(`${API_BASE}/users/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+        const alertDiv = document.getElementById('registrationAlert');
+
+        if (response.ok) {
+          alertDiv.className = 'alert success';
+          alertDiv.textContent = '✅ ' + data.message;
+          document.getElementById('registrationForm').reset();
+          setTimeout(() => {
+            alertDiv.className = 'alert';
+          }, 4000);
+        } else {
+          alertDiv.className = 'alert error';
+          alertDiv.textContent = '❌ ' + data.error;
+        }
+      } catch (error) {
+        const alertDiv = document.getElementById('registrationAlert');
+        alertDiv.className = 'alert error';
+        alertDiv.textContent = '❌ Error: ' + error.message;
+      }
+    });
+
+    // ============ ADMIN LOGIN ============
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const loginData = {
+        email: document.getElementById('adminEmail').value,
+        password: document.getElementById('adminPassword').value
+      };
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(loginData)
+        });
+
+        const data = await response.json();
+        const alertDiv = document.getElementById('loginAlert');
+
+        if (response.ok) {
+          authToken = data.token;
+          localStorage.setItem('authToken', authToken);
+          alertDiv.className = 'alert success';
+          alertDiv.textContent = '✅ Login successful!';
+          
+          setTimeout(() => {
+            showAdminDashboard();
+            document.getElementById('loginForm').reset();
+          }, 1000);
+        } else {
+          alertDiv.className = 'alert error';
+          alertDiv.textContent = '❌ ' + data.error;
+        }
+      } catch (error) {
+        const alertDiv = document.getElementById('loginAlert');
+        alertDiv.className = 'alert error';
+        alertDiv.textContent = '❌ Error: ' + error.message;
+      }
+    });
+
+    // ============ ADMIN FUNCTIONS ============
+    async function loadStats() {
+      try {
+        const response = await fetch(`${API_BASE}/admin/stats`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+
+        if (response.ok) {
+          const stats = await response.json();
+          document.getElementById('totalCount').textContent = stats.totalRegistrations;
+          document.getElementById('pendingCount').textContent = stats.pendingRegistrations;
+          document.getElementById('approvedCount').textContent = stats.approvedRegistrations;
+          document.getElementById('rejectedCount').textContent = stats.rejectedRegistrations;
+        } else if (response.status === 401) {
+          logout();
+        }
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    function showAllRegistrations() {
+      currentFilterStatus = null;
+      loadRegistrations();
+      updateTabActive(0);
+    }
+
+    function showPendingRegistrations() {
+      currentFilterStatus = 'Pending';
+      loadRegistrations();
+      updateTabActive(1);
+    }
+
+    function showApprovedRegistrations() {
+      currentFilterStatus = 'Approved';
+      loadRegistrations();
+      updateTabActive(2);
+    }
+
+    function showRejectedRegistrations() {
+      currentFilterStatus = 'Rejected';
+      loadRegistrations();
+      updateTabActive(3);
+    }
+
+    function updateTabActive(index) {
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+    }
+
+    async function loadRegistrations() {
+      try {
+        const response = await fetch(`${API_BASE}/admin/registrations`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+
+        if (response.ok) {
+          let registrations = await response.json();
+
+          if (currentFilterStatus) {
+            registrations = registrations.filter(r => r.status === currentFilterStatus);
+          }
+
+          displayRegistrationsTable(registrations);
+        } else if (response.status === 401) {
+          logout();
+        }
+      } catch (error) {
+        console.error('Error loading registrations:', error);
+      }
+    }
+
+    function displayRegistrationsTable(registrations) {
+      const tableDiv = document.getElementById('registrationsTable');
+
+      if (registrations.length === 0) {
+        tableDiv.innerHTML = '<div class="empty-state">📚 No students found</div>';
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Qualification</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      registrations.forEach(reg => {
+        const statusClass = `status-${reg.status.toLowerCase()}`;
+        html += `
+          <tr>
+            <td>${escapeHtml(reg.name)}</td>
+            <td>${escapeHtml(reg.email)}</td>
+            <td>${escapeHtml(reg.mobileNumber)}</td>
+            <td>${escapeHtml(reg.qualification)}</td>
+            <td><span class="status-badge ${statusClass}">${reg.status}</span></td>
+            <td>
+              <div class="action-buttons">
+                ${reg.status !== 'Approved' ? `<button class="btn-action btn-approve" onclick="updateStatus('${reg._id}', 'Approved')">Approve</button>` : ''}
+                ${reg.status !== 'Rejected' ? `<button class="btn-action btn-reject" onclick="updateStatus('${reg._id}', 'Rejected')">Reject</button>` : ''}
+                <button class="btn-action btn-delete" onclick="deleteRegistration('${reg._id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      tableDiv.innerHTML = html;
+    }
+
+    async function updateStatus(id, status) {
+      if (!confirm(`Are you sure you want to ${status.toLowerCase()} this student?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/registrations/${id}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ status })
+        });
+
+        if (response.ok) {
+          showDashboardNotification('Student status updated successfully!', 'success');
+          loadRegistrations();
+          loadStats();
+        } else {
+          showDashboardNotification('Failed to update status', 'error');
+        }
+      } catch (error) {
+        showDashboardNotification('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function deleteRegistration(id) {
+      if (!confirm('Are you sure you want to delete this student registration?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/registrations/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+
+        if (response.ok) {
+          showDashboardNotification('Student registration deleted successfully!', 'success');
+          loadRegistrations();
+          loadStats();
+        } else {
+          showDashboardNotification('Failed to delete registration', 'error');
+        }
+      } catch (error) {
+        showDashboardNotification('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function searchRegistrations() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) {
+        loadRegistrations();
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/admin/search?q=${encodeURIComponent(query)}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+
+        if (response.ok) {
+          let results = await response.json();
+          if (currentFilterStatus) {
+            results = results.filter(r => r.status === currentFilterStatus);
+          }
+          displayRegistrationsTable(results);
+        }
+      } catch (error) {
+        showDashboardNotification('Error: ' + error.message, 'error');
+      }
+    }
+
+    function showDashboardNotification(message, type) {
+      const alertDiv = document.getElementById('dashboardAlert');
+      alertDiv.className = `alert ${type}`;
+      alertDiv.textContent = (type === 'success' ? '✅ ' : '❌ ') + message;
+      setTimeout(() => {
+        alertDiv.className = 'alert';
+      }, 3000);
+    }
+
+    function logout() {
+      localStorage.removeItem('authToken');
+      authToken = null;
+      showRegistration();
+      document.getElementById('loginForm').reset();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Check if user is logged in on page load
+    window.addEventListener('load', () => {
+      if (authToken) {
+        showAdminDashboard();
+      }
+    });
+
+    // Search on Enter key
+    document.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && e.target.id === 'searchInput') {
+        searchRegistrations();
+      }
+    });
+  </script>
 </body>
 </html>
-

@@ -1,22 +1,27 @@
-FROM node:18-alpine
+# Use official Node.js 22 Alpine image
+FROM node:22-alpine
 
+# Create app directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --production
+RUN npm install --omit=dev
 
-# Copy application code
+# Copy all project files
 COPY . .
 
-# Expose port
+# Expose application port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8080/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+# Health Check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8080/health',(res)=>{if(res.statusCode!==200)process.exit(1)}).on('error',()=>process.exit(1))"
+
+# Environment
+ENV NODE_ENV=production
 
 # Start application
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]
